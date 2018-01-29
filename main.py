@@ -71,4 +71,16 @@ async def on_message(message):
                 # 価格のメッセージを出力
                 await client.send_message(message.channel, msg)
 
+            # 送られてきたメッセージの引数が2つあった場合
+            if len(args = message.content.split(" ")) == 2:
+                # 第1引数がcurrency_lsitの中にあり、かつ、第2引数が数字なら
+                # coin * 枚数を計算
+                if args[0].lower() in currency_list and args[1].isdigit():
+                    # NEMだけ実装
+                    coin = market.ticker("nem", convert='JPY')[0]
+                    price = coin['price_jpy'] * int(args[1])
+                    msg = "Coinmarketcap："+ str(args[1]) +"NEMは" + str(price) + "円です。"
+                    # 価格のメッセージを出力
+                    await client.send_message(message.channel, msg)
+
 client.run(token)
