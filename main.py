@@ -62,7 +62,7 @@ async def on_message(message):
                 # coinmarketcapから価格を取得
                 coin = market.ticker("ethereum", convert='JPY')[0]
                 msg = "Coinmarketcap：1ETHは" + str(coin['price_jpy']) + "円です。"
-                # 価格のメッセージを出力
+                # 価格のメッセージを出力to
                 await client.send_message(message.channel, msg)
                 # coinmarketcapから価格を取得
                 coin = market.ticker("ripple", convert='JPY')[0]
@@ -126,5 +126,34 @@ async def on_message(message):
 #            elif message.content.lower() == "!down_name":
 #                await client.send_file(message.channel, 'name_conv_list.txt')
 
+
+            # 送られてきたメッセージの引数が2つあった場合
+            elif len(message.content.split(" ")) == 2:
+                # float型に変換可能(実数)かどうかの確認に正規表現を使う
+                num_reg = re.compile("^\d+(\.\d+)?\Z")
+                # 第1引数がcurrency_lsitの中にあり、かつ、第2引数が実数なら
+                # coin * 枚数を計算
+                args = message.content.split(" ")
+                if args[0].lower() == '?btc' and bool(num_reg.match(args[1])):
+                    # coinmarketcapから価格を取得
+                    coin = market.ticker("bitcoin", convert='JPY')[0]
+                    price = float(coin['price_jpy']) * float(args[1])
+                    msg = "Coinmarketcap："+ str(args[1]) +"BTCは" + str(round(price, 3)) + "円です。"
+                    # 価格のメッセージを出力
+                    await client.send_message(message.channel, msg)
+                if args[0].lower() == '?eth' and bool(num_reg.match(args[1])):
+                    # coinmarketcapから価格を取得
+                    coin = market.ticker("ethereum", convert='JPY')[0]
+                    price = float(coin['price_jpy']) * float(args[1])
+                    msg = "Coinmarketcap："+ str(args[1]) +"ETHは" + str(round(price, 3)) + "円です。"
+                    # 価格のメッセージを出力
+                    await client.send_message(message.channel, msg)
+                if args[0].lower() == '?xem' and bool(num_reg.match(args[1])):
+                    # coinmarketcapから価格を取得
+                    coin = market.ticker("nem", convert='JPY')[0]
+                    price = float(coin['price_jpy']) * float(args[1])
+                    msg = "Coinmarketcap："+ str(args[1]) +"NEMは" + str(round(price, 3)) + "円です。"
+                    # 価格のメッセージを出力
+                    await client.send_message(message.channel, msg)
 
 client.run(token)
