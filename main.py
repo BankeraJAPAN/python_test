@@ -13,6 +13,7 @@ from coinmarketcap import Market
 token = "NDA1MzY1ODI0NDQyOTkwNTky.DUjV6A.kVeYsW0rldoLX4BtKczQCiXqI58"
 # pettyaテストtoken
 #token = "NDA0NjE4MDA4MjA0NTQxOTYy.DUoAtQ.DqDyvVDhSIQSMD-KNRtx86WKRgo"
+# hogelineテストtoken
 # token = "NDA3NTYwNTkxNDM2NDE0OTg2.DVK3gg.3tFv-GiJ0le-qYGGFynn5xARa4A"
 # 通貨変換対象リスト
 currency_list = ['?btc', '?eth', '?xem', '?諭吉']
@@ -82,7 +83,7 @@ async def on_message(message):
                 # 価格のメッセージを出力
                 await client.send_message(message.channel, msg)
 
-                # 送られてきたメッセージの引数が2つあった場合
+            # 送られてきたメッセージの引数が2つあった場合
             elif len(message.content.split(" ")) == 2:
                 # 仮想通貨リストファイルのPATH
                 path = 'name_conv_list.txt'
