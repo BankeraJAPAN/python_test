@@ -1,7 +1,6 @@
 import discord
 #import urllib.request as req
 import json
-import os
 import re
 
 from currency import *
@@ -17,6 +16,9 @@ token = "NDA1MzY1ODI0NDQyOTkwNTky.DUjV6A.kVeYsW0rldoLX4BtKczQCiXqI58"
 # token = "NDA3NTYwNTkxNDM2NDE0OTg2.DVK3gg.3tFv-GiJ0le-qYGGFynn5xARa4A"
 # 通貨変換対象リスト
 currency_list = ['?btc', '?eth', '?xem', '?諭吉']
+# チャンネルID
+technology = "405377859662774281"
+othercoin = "404641206996303879"
 
 client = discord.Client()
 client.get_all_members()
@@ -55,7 +57,7 @@ async def on_message(message):
             # 価格のメッセージを出力
             await client.send_message(message.channel, msg)
 
-        if message.channel.id == "405377859662774281":
+        if message.channel.id == technology | message.channel.id == othercoin:
             # 送られてきたメッセージの引数が2つあった場合
             if len(message.content.split(" ")) == 2:
                 try:
@@ -77,9 +79,9 @@ async def on_message(message):
                     if json_data.get(key) is not None and bool(num_reg.match(args[1])):
                         # coinmarketcapから価格を取得
                         coin = market.ticker(json_data[key].replace(" ", "-"), convert='JPY')[0]
-                        if (coin.get('error') is None):
+                        if coin.get('error') is None:
                             price = float(coin['price_jpy']) * float(args[1])
-                            msg = "Coinmarketcap：" + str(args[1]) + key +"は" + str(round(price, 3)) + "円です。"
+                            msg = "Coinmarketcap：" + str(args[1]) + key + "は" + str(round(price, 3)) + "円です。"
                             # 価格のメッセージを出力
                             await client.send_message(message.channel, msg)
                         else:
@@ -87,22 +89,23 @@ async def on_message(message):
                             await client.send_message(message.channel, msg)
                 except IOError:
                     print("ファイルがありません")
-            elif message.content.lower() == "!conv":
-                # coinmarketcapから価格を取得
-                coin = market.ticker(limit=0)
-            for i in range(len(coin)):
-                keys = '"' + coin[i]['symbol'] + '"'
-                values = '"' + coin[i]['name'] + '"'
-                if i != len(coin) - 1:
-                    element = element + keys + ":" + values + ","
-                else:
-                    element = element + keys + ":" + values + "}"
-                    f = open('name_conv_list.txt', 'w')
-                    f.write(element)
-                    f.close()
-                    msg = "name_conv_list.txtを作成しました。"
-                    await client.send_message(message.channel, msg)
-                    #            elif message.content.lower() == "!down_name":
-                    #                await client.send_file(message.channel, 'name_conv_list.txt')
+            if message.channel.id == technology:
+                if message.content.lower() == "!conv":
+                    # coinmarketcapから価格を取得
+                    coin = market.ticker(limit=0)
+                for i in range(len(coin)):
+                    keys = '"' + coin[i]['symbol'] + '"'
+                    values = '"' + coin[i]['name'] + '"'
+                    if i != len(coin) - 1:
+                        element = element + keys + ":" + values + ","
+                    else:
+                        element = element + keys + ":" + values + "}"
+                        f = open('name_conv_list.txt', 'w')
+                        f.write(element)
+                        f.close()
+                        msg = "name_conv_list.txtを作成しました。"
+                        await client.send_message(message.channel, msg)
+                    # elif message.content.lower() == "!down_name":
+                    #   await client.send_file(message.channel, 'name_conv_list.txt')
 
 client.run(token)
