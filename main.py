@@ -57,7 +57,7 @@ async def on_message(message):
             # 価格のメッセージを出力
             await client.send_message(message.channel, msg)
 
-        if message.channel.id == technology | message.channel.id == othercoin:
+        if message.channel.id == technology or message.channel.id == othercoin:
             # 送られてきたメッセージの引数が2つあった場合
             if len(message.content.split(" ")) == 2:
                 try:
