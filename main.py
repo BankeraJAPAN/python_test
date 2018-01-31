@@ -93,13 +93,13 @@ async def on_message(message):
                 if message.content.lower() == "!conv":
                     # coinmarketcapから価格を取得
                     coin = market.ticker(limit=0)
-                for i in range(len(coin)):
-                    keys = '"' + coin[i]['symbol'] + '"'
-                    values = '"' + coin[i]['name'] + '"'
-                    if i != len(coin) - 1:
-                        element = element + keys + ":" + values + ","
-                    else:
-                        element = element + keys + ":" + values + "}"
+                    for i in range(len(coin)):
+                        keys = '"' + coin[i]['symbol'] + '"'
+                        values = '"' + coin[i]['name'] + '"'
+                        if i != len(coin) - 1:
+                            element = element + keys + ":" + values + ","
+                        else:
+                            element = element + keys + ":" + values + "}"
                         f = open('name_conv_list.txt', 'w')
                         f.write(element)
                         f.close()
