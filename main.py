@@ -100,11 +100,11 @@ async def on_message(message):
                             element = element + keys + ":" + values + ","
                         else:
                             element = element + keys + ":" + values + "}"
-                        f = open('name_conv_list.txt', 'w')
-                        f.write(element)
-                        f.close()
-                        msg = "name_conv_list.txtを作成しました。"
-                        await client.send_message(message.channel, msg)
+                    f = open('name_conv_list.txt', 'w')
+                    f.write(element)
+                    f.close()
+                    msg = "name_conv_list.txtを作成しました。"
+                    await client.send_message(message.channel, msg)
                     # elif message.content.lower() == "!down_name":
                     #   await client.send_file(message.channel, 'name_conv_list.txt')
 
