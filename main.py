@@ -51,7 +51,7 @@ async def on_message(message):
             await client.send_message(message.channel, msg)
 
         elif han_message.lower() in currency_list:
-            src = han_message.replace("?", "") + ".getBnk"
+            src = han_message.lower().replace("?", "") + ".getBnk"
 
             if "諭吉" in src:
                 src = src.replace("諭吉", "jpy")
