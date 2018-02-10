@@ -1,11 +1,11 @@
 import discord
-#import urllib.request as req
 import json
 import re
+# import urllib.request as req
 
 from currency import *
 from coinmarketcap import Market
-#from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 
 
 # 本番token
@@ -24,12 +24,14 @@ client = discord.Client()
 client.get_all_members()
 market = Market()
 
+
 @client.event
 async def on_ready():
     print('Logged in as')
     print(client.user.name)
     print(client.user.id)
     print('------')
+
 
 @client.event
 async def on_message(message):
@@ -78,7 +80,8 @@ async def on_message(message):
                     # coin * 枚数を計算
                     if json_data.get(key) is not None and bool(num_reg.match(args[1])):
                         # coinmarketcapから価格を取得
-                        coin = market.ticker(json_data[key].replace(" ", "-"), convert='JPY')[0]
+                        conv_coin = json_data[key].replace(" ", "-")
+                        coin = market.ticker(conv_coin, convert='JPY')[0]
                         if coin.get('error') is None:
                             price = float(coin['price_jpy']) * float(args[1])
                             msg = "Coinmarketcap：" + str(args[1]) + key + "は" + str(round(price, 3)) + "円です。"
@@ -89,6 +92,8 @@ async def on_message(message):
                             await client.send_message(message.channel, msg)
                 except IOError:
                     print("ファイルがありません")
+                except:
+                    return
             if message.channel.id == technology:
                 if message.content.lower() == "!conv":
                     # coinmarketcapから価格を取得
@@ -107,5 +112,6 @@ async def on_message(message):
                     await client.send_message(message.channel, msg)
                     # elif message.content.lower() == "!down_name":
                     #   await client.send_file(message.channel, 'name_conv_list.txt')
+
 
 client.run(token)
