@@ -5,6 +5,7 @@ import re
 
 from currency import *
 from coinmarketcap import Market
+from zenhan import z2h
 # from bs4 import BeautifulSoup
 
 
@@ -37,6 +38,7 @@ async def on_ready():
 async def on_message(message):
     global element
     element = "{"
+    han_message = z2h(message.content)
 
     # 送り主がBotだった場合反応したくないので
     if client.user != message.author:
@@ -48,8 +50,8 @@ async def on_message(message):
             # メッセージが送られてきたチャンネルへメッセージを送ります
             await client.send_message(message.channel, msg)
 
-        elif message.content.lower() in currency_list:
-            src = message.content.lower().replace("?", "") + ".getBnk"
+        elif han_message.lower() in currency_list:
+            src = han_message.replace("?", "") + ".getBnk"
 
             if "諭吉" in src:
                 src = src.replace("諭吉", "jpy")
@@ -61,7 +63,7 @@ async def on_message(message):
 
         if message.channel.id == technology or message.channel.id == othercoin:
             # 送られてきたメッセージの引数が2つあった場合
-            if len(message.content.split(" ")) == 2:
+            if len(han_message.split(" ")) == 2:
                 try:
                     # 仮想通貨リストファイルのPATH
                     path = 'name_conv_list.txt'
@@ -74,7 +76,7 @@ async def on_message(message):
                     # float型に変換可能(実数)かどうかの確認に正規表現を使う
                     num_reg = re.compile("^\d+(\.\d+)?\Z")
                     # メッセージから引数を取得
-                    args = message.content.split(" ")
+                    args = han_message.split(" ")
                     key = args[0].replace("?", "").upper()
                     # 第1引数のkeyがjson_dataの中にあり、かつ、第2引数が実数なら
                     # coin * 枚数を計算
@@ -95,7 +97,7 @@ async def on_message(message):
                 except:
                     return
             if message.channel.id == technology:
-                if message.content.lower() == "!conv":
+                if han_message.lower() == "!conv":
                     # coinmarketcapから価格を取得
                     coin = market.ticker(limit=0)
                     for i in range(len(coin)):
@@ -110,7 +112,7 @@ async def on_message(message):
                     f.close()
                     msg = "name_conv_list.txtを作成しました。"
                     await client.send_message(message.channel, msg)
-                    # elif message.content.lower() == "!down_name":
+                    # elif han_message.lower() == "!down_name":
                     #   await client.send_file(message.channel, 'name_conv_list.txt')
 
 
