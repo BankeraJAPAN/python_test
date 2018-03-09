@@ -10,9 +10,9 @@ from zenhan import z2h
 
 
 # 本番token
-token = "NDA1MzY1ODI0NDQyOTkwNTky.DUjV6A.kVeYsW0rldoLX4BtKczQCiXqI58"
+#token = "NDA1MzY1ODI0NDQyOTkwNTky.DUjV6A.kVeYsW0rldoLX4BtKczQCiXqI58"
 # pettyaテストtoken
-# token = "NDA0NjE4MDA4MjA0NTQxOTYy.DUoAtQ.DqDyvVDhSIQSMD-KNRtx86WKRgo"
+token = "NDA0NjE4MDA4MjA0NTQxOTYy.DUoAtQ.DqDyvVDhSIQSMD-KNRtx86WKRgo"
 # yufiテストtoken
 # token = "NDA3NTYwNTkxNDM2NDE0OTg2.DVK3gg.3tFv-GiJ0le-qYGGFynn5xARa4A"
 # 通貨変換対象リスト
@@ -86,7 +86,7 @@ async def on_message(message):
                         coin = market.ticker(conv_coin, convert='JPY')[0]
                         if coin.get('error') is None:
                             price = float(coin['price_jpy']) * float(args[1])
-                            msg = "Coinmarketcap：" + str(args[1]) + key + "は" + str(round(price, 3)) + "円です。"
+                            msg = "Coinmarketcap：" + str(args[1]) + key + "は" + str("{:,.3f}".format(round(price, 3))) + "円です。"
                             # 価格のメッセージを出力
                             await client.send_message(message.channel, msg)
                         else:

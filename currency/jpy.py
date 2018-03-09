@@ -1,5 +1,6 @@
 import urllib.request as req
 import json
+import requests
 
 # 1万円計算用
 yukichi = 10000
@@ -21,6 +22,6 @@ def getBnk():
     bankera = price_ticker['last'] * yukichi
 
     # 価格のメッセージを設定
-    msg = "1万円で約" + str(round(bankera, 1)) + "BNK購入できます。"
+    msg = "1万円で約" + str("{:,.3f}".format(round(bankera, 3))) + "BNK購入できます。"
 
     return msg

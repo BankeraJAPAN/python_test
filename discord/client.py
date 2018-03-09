@@ -137,6 +137,10 @@ class Client:
 
     """
     def __init__(self, *, loop=None, **options):
+        """
+
+        :rtype:
+        """
         self.ws = None
         self.email = None
         self.loop = asyncio.get_event_loop() if loop is None else loop
@@ -865,6 +869,7 @@ class Client:
             @client.async_event
             def on_ready():
                 print('Ready!')
+                :rtype:
 
         """
 

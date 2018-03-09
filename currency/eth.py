@@ -16,6 +16,6 @@ def getBnk():
     price_ticker = json.loads(res.read().decode('utf8'))
 
     # 価格のメッセージを設定
-    msg = "1ETHで約" + str(round(price_ticker['last'], 1)) + "BNK購入できます。"
+    msg = "1ETHで約" + str("{:,.3f}".format(round(price_ticker['last'], 3))) + "BNK購入できます。"
 
     return msg
