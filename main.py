@@ -7,6 +7,7 @@ from currency import *
 from coinmarketcap import Market
 from zenhan import z2h
 # from bs4 import BeautifulSoup
+import sys
 
 
 # 本番token
@@ -20,6 +21,8 @@ currency_list = ['?btc', '?eth', '?xem', '?諭吉']
 # チャンネルID
 technology = "405377859662774281"
 othercoin = "404641206996303879"
+bot = '426417253584601098'
+restriction_channel = [technology, othercoin, bot]
 
 client = discord.Client()
 client.get_all_members()
@@ -42,6 +45,8 @@ async def on_message(message):
 
     # 送り主がBotだった場合反応したくないので
     if client.user != message.author:
+        if message.content.startswith('RESTART'):
+            sys.exit()
         if message.content.startswith("?エラリスト") | message.content.startswith("？エラリスト"):
             count = 0
             for member in client.get_all_members():
@@ -61,7 +66,7 @@ async def on_message(message):
             # 価格のメッセージを出力
             await client.send_message(message.channel, msg)
 
-        if message.channel.id == technology or message.channel.id == othercoin:
+        if message.channel.id in restriction_channel:
             # 送られてきたメッセージの引数が2つあった場合
             if len(han_message.split(" ")) == 2:
                 try:
