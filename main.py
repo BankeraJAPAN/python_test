@@ -2,12 +2,12 @@ import discord
 import json
 import re
 # import urllib.request as req
+import sys
 
 from currency import *
 from coinmarketcap import Market
 from zenhan import z2h
 # from bs4 import BeautifulSoup
-import sys
 
 
 # 本番token
