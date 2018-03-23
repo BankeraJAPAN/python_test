@@ -45,8 +45,6 @@ async def on_message(message):
 
     # 送り主がBotだった場合反応したくないので
     if client.user != message.author:
-        if message.content.startswith('RESTART'):
-            sys.exit()
         if message.content.startswith("?エラリスト") | message.content.startswith("？エラリスト"):
             count = 0
             for member in client.get_all_members():
@@ -119,6 +117,10 @@ async def on_message(message):
                     await client.send_message(message.channel, msg)
                     # elif han_message.lower() == "!down_name":
                     #   await client.send_file(message.channel, 'name_conv_list.txt')
+                # 再起動コマンド追加
+                if message.content.startswith('reboot'):
+                    await client.send_message(message.channel, 'BOTを再起動します')
+                    sys.exit()
 
 
 client.run(token)
