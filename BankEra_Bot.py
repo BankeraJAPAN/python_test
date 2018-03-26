@@ -1,3 +1,4 @@
+from twitter import Twitter, OAuth
 import discord
 import urllib.request as req
 import json
@@ -12,6 +13,14 @@ token = "NDA1MzY1ODI0NDQyOTkwNTky.DUjV6A.kVeYsW0rldoLX4BtKczQCiXqI58"
 #token = "NDA0NjE4MDA4MjA0NTQxOTYy.DUoAtQ.DqDyvVDhSIQSMD-KNRtx86WKRgo"
 # 1万円計算用
 yukichi = 10000
+
+#Twitter Auth
+t = Twitter(auth=OAuth(
+    '935058768563339265-7eIsN2892DRYL6tCrTjzPGnySQQUHfr',
+    'G3xDy4lUsRBQbR3GQ1ZEF7ankZgNY64gBpf7x0edPwBxF',
+    'xMzUeWmIimG83P9QMhFnENCG4',
+    'REDBG6CH9LkiR5ACBgB5hNBEYnwP00Als7TLi39WZCSdS3qLcG'
+))
 
 client = discord.Client()
 client.get_all_members()
@@ -86,5 +95,29 @@ async def on_message(message):
             echo = "1万円で約" + str(round(bankera, 1)) + "BNK購入できます。"
             await client.send_message(message.channel, echo)
 
+        elif message.content.startswith("?最新情報") | message.content.startswith("？最新情報"):
+            #Get list from Twitter
+            remain          = True
+            while remain:
+                userTweets      = []
+                #Last Tweet
+                max_id          = '976364667172982784'
+                #BankeraJP ID
+                user_id         = '908504581797113856'
+                remainNum       = 0
+                #Get Tweet
+                numberOfTweets  = 1
+                count           = 1
+                #Get TimeLine
+                aTimeLine = t.statuses.user_timeline(user_id=user_id, count=count, max_id=max_id)
+                for tweet in aTimeLine:
+                    userTweets.append(tweet['text'])
+                    max_id = aTimeLine[-1]['id']-1
+                    remainNum = numberOfTweets - len(userTweets)
+                    count = remainNum
+                    if len(userTweets)+1 > numberOfTweets:
+                        m = userTweets
+                        remain = False
+                        await client.send_message(message.channel, m)
 
 client.run(token)
