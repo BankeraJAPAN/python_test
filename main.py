@@ -8,6 +8,7 @@ from currency import *
 from coinmarketcap import Market
 from zenhan import z2h
 # from bs4 import BeautifulSoup
+from twitter import Twitter, OAuth
 
 
 # 本番token
@@ -27,6 +28,13 @@ restriction_channel = [technology, othercoin, bot]
 client = discord.Client()
 client.get_all_members()
 market = Market()
+# Twitter Auth
+t = Twitter(auth=OAuth(
+    '935058768563339265-7eIsN2892DRYL6tCrTjzPGnySQQUHfr',
+    'G3xDy4lUsRBQbR3GQ1ZEF7ankZgNY64gBpf7x0edPwBxF',
+    'xMzUeWmIimG83P9QMhFnENCG4',
+    'REDBG6CH9LkiR5ACBgB5hNBEYnwP00Als7TLi39WZCSdS3qLcG'
+))
 
 
 @client.event
@@ -121,6 +129,45 @@ async def on_message(message):
                 if message.content.startswith('reboot'):
                     await client.send_message(message.channel, 'BOTを再起動します')
                     sys.exit()
+            if message.channel.id == bot:
+                if message.content.startswith("?最新情報") | message.content.startswith("？最新情報"):
+                    # Get list from Twitter
+                    # Last Tweet
+                    max_id = '976364667172982784'
+                    # BankeraJP ID
+                    user_id = '908504581797113856'
+                    # Get Tweet
+                    count = 1
+                    # Get TimeLine
+                    aTimeLine = t.statuses.user_timeline(user_id=user_id, count=count, max_id=max_id)
+                    msg = aTimeLine[0]['text']
+                    await client.send_message(message.channel, msg)
+                    ''' ツイートの取得数変更時に利用
+                    remain = True
+                    while remain:
+                        userTweets = []
+                        # Last Tweet
+                        max_id = '976364667172982784'
+                        # BankeraJP ID
+                        user_id = '908504581797113856'
+                        remainNum = 0
+                        # Get Tweet
+                        numberOfTweets = 1
+                        count = 1
+                        # Get TimeLine
+                        aTimeLine = t.statuses.user_timeline(user_id=user_id, count=count, max_id=max_id)
+                        for tweet in aTimeLine:
+                            userTweets.append(tweet['text'])
+                            print(tweet)
+                            print(userTweets)
+                            max_id = aTimeLine[-1]['id'] - 1
+                            remainNum = numberOfTweets - len(userTweets)
+                            count = remainNum
+                            if len(userTweets) + 1 > numberOfTweets:
+                                msg = userTweets
+                                remain = False
+                                await client.send_message(message.channel, msg)
+                    '''
 
 
 client.run(token)
