@@ -2,6 +2,7 @@ import discord
 import json
 import re
 # import urllib.request as req
+import sys
 
 from currency import *
 from coinmarketcap import Market
@@ -20,6 +21,8 @@ currency_list = ['?btc', '?eth', '?xem', '?諭吉']
 # チャンネルID
 technology = "405377859662774281"
 othercoin = "404641206996303879"
+bot = '426417253584601098'
+restriction_channel = [technology, othercoin, bot]
 
 client = discord.Client()
 client.get_all_members()
@@ -61,7 +64,7 @@ async def on_message(message):
             # 価格のメッセージを出力
             await client.send_message(message.channel, msg)
 
-        if message.channel.id == technology or message.channel.id == othercoin:
+        if message.channel.id in restriction_channel:
             # 送られてきたメッセージの引数が2つあった場合
             if len(han_message.split(" ")) == 2:
                 try:
@@ -114,6 +117,10 @@ async def on_message(message):
                     await client.send_message(message.channel, msg)
                     # elif han_message.lower() == "!down_name":
                     #   await client.send_file(message.channel, 'name_conv_list.txt')
+                # 再起動コマンド追加
+                if message.content.startswith('reboot'):
+                    await client.send_message(message.channel, 'BOTを再起動します')
+                    sys.exit()
 
 
 client.run(token)
