@@ -2,13 +2,15 @@ from twitter import Twitter, OAuth
 import discord
 import urllib.request as req
 import json
+import pickle
 
 #from coinmarketcap import Market
 #from bs4 import BeautifulSoup
 
 
 # 本番token
-token = "NDA1MzY1ODI0NDQyOTkwNTky.DUjV6A.kVeYsW0rldoLX4BtKczQCiXqI58"
+#token = "NDA1MzY1ODI0NDQyOTkwNTky.DUjV6A.kVeYsW0rldoLX4BtKczQCiXqI58"
+token = "NDI3NzAyNTQ4NTI3NDQ4MDY2.DZswPw.S0PAw61ckAypOKczqXjsdHTzinY"
 # テストtoken
 #token = "NDA0NjE4MDA4MjA0NTQxOTYy.DUoAtQ.DqDyvVDhSIQSMD-KNRtx86WKRgo"
 # 1万円計算用
@@ -97,27 +99,28 @@ async def on_message(message):
 
         elif message.content.startswith("?最新情報") | message.content.startswith("？最新情報"):
             #Get list from Twitter
-            remain          = True
-            while remain:
                 userTweets      = []
-                #Last Tweet
-                max_id          = '976364667172982784'
                 #BankeraJP ID
-                user_id         = '908504581797113856'
-                remainNum       = 0
+                user_id         = '3308453287'
                 #Get Tweet
-                numberOfTweets  = 1
                 count           = 1
                 #Get TimeLine
-                aTimeLine = t.statuses.user_timeline(user_id=user_id, count=count, max_id=max_id)
-                for tweet in aTimeLine:
-                    userTweets.append(tweet['text'])
-                    max_id = aTimeLine[-1]['id']-1
-                    remainNum = numberOfTweets - len(userTweets)
-                    count = remainNum
-                    if len(userTweets)+1 > numberOfTweets:
-                        m = userTweets
-                        remain = False
-                        await client.send_message(message.channel, m)
+                aTimeLine = t.statuses.user_timeline(user_id=user_id, count=count)
+                msg_t = aTimeLine[0]['text']
+                f = open('sample.textfile','rb')
+                if f:
+                    load = pickle.load(f)
+
+                    if msg_t != load:
+                        await client.send_message(message.channel, msg_t)
+                    else:
+                        await client.send_message(message.channel, '前回と内容が一緒です')
+                        await client.send_message(message.channel, msg_t)
+                else:
+                    await client.send_message(message.channel, msg_t)
+               
+                f = open('sample.textfile','wb')
+                pickle.dump(msg_t,f)
+                f.close
 
 client.run(token)

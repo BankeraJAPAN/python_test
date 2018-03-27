@@ -3,13 +3,14 @@ import json
 import re
 # import urllib.request as req
 import sys
+import pickle
 
 from currency import *
 from coinmarketcap import Market
 from zenhan import z2h
 # from bs4 import BeautifulSoup
 from twitter import Twitter, OAuth
-
+from pathlib import Path
 
 # 本番token
 token = "NDA1MzY1ODI0NDQyOTkwNTky.DUjV6A.kVeYsW0rldoLX4BtKczQCiXqI58"
@@ -132,16 +133,32 @@ async def on_message(message):
             if message.channel.id == bot:
                 if message.content.startswith("?最新情報") | message.content.startswith("？最新情報"):
                     # Get list from Twitter
-                    # Last Tweet
-                    max_id = '976364667172982784'
                     # BankeraJP ID
                     user_id = '908504581797113856'
                     # Get Tweet
                     count = 1
+                    # Get Hist File
+                    hist_file = Path("last.tweet")
                     # Get TimeLine
-                    aTimeLine = t.statuses.user_timeline(user_id=user_id, count=count, max_id=max_id)
-                    msg = aTimeLine[0]['text']
-                    await client.send_message(message.channel, msg)
+                
+                    aTimeLine = t.statuses.user_timeline(user_id=user_id, count=count)
+                    msg_t = aTimeLine[0]['text']
+                    if hist_file.is_file():
+                        read_hist = open('last.tweet','rb')
+                        load = pickle.load(read_hist)
+
+                        if msg_t != load:
+                            await client.send_message(message.channel, msg_t)
+                        else:
+                            await client.send_message(message.channel, '前回と内容が一緒です')
+                            await client.send_message(message.channel, msg_t)
+                    else:
+                        await client.send_message(message.channel, msg_t)
+
+                    write_hist = open('last.tweet','wb')
+                    pickle.dump(msg_t,write_hist)
+                    write_hist.close
+
                     ''' ツイートの取得数変更時に利用
                     remain = True
                     while remain:
